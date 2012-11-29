@@ -1855,10 +1855,11 @@ namespace LinkedIn
         }
 
         private bool PostRequest<T>(T item, UriBuilder location,
-                                 HttpDeliveryMethods delivery = HttpDeliveryMethods.PostRequest)
+                                 HttpDeliveryMethods delivery = HttpDeliveryMethods.PostRequest | HttpDeliveryMethods.AuthorizationHeaderRequest)
         {
             var webRequest = WebWorker.PrepareAuthorizedRequest(new MessageReceivingEndpoint(location.Uri, delivery),
                                                                 GetAccessToken());
+            
             webRequest = InitializeRequest(webRequest, item);
             HttpWebResponse webResponse = (HttpWebResponse)SendRequest(webRequest);
             Utilities.ProcessResponse(webResponse);
@@ -1867,7 +1868,7 @@ namespace LinkedIn
 
         private bool PutRequest<T>(T item, UriBuilder location)
         {
-            return PostRequest(item, location, HttpDeliveryMethods.PutRequest);
+            return PostRequest(item, location, HttpDeliveryMethods.PutRequest | HttpDeliveryMethods.AuthorizationHeaderRequest);
         }
 
         private T GetRequest<T>(Uri location, IEnumerable<HttpHeader> headers = null)
